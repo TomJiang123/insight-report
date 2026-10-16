@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>InsightReport · 智能数据分析报告引擎</title>
+<style>
+  :root {
+    --bg: #0b1219; --panel: #111d27; --surface: #1a2c3a;
+    --ink: #d6e6f0; --ink-dim: #7e9aaa; --ink-muted: #4d6a7a;
+    --accent: #3dc9a0; --accent-dim: #259675;
+    --amber: #f5b85a; --coral: #f57a6e; --blue: #5ab0e8;
+    --font: "Bahnschrift","DIN Alternate","Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    --font-mono: "Cascadia Code","Consolas",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);color:var(--ink);background:var(--bg);
+       background-image:radial-gradient(ellipse at 30% 10%,rgba(60,160,200,.06) 0%,transparent 60%),
+                        radial-gradient(ellipse at 70% 90%,rgba(180,100,220,.04) 0%,transparent 60%);
+       -webkit-font-smoothing:antialiased;line-height:1.6}
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-thumb{background:var(--ink-muted);border-radius:4px}
+
+  .container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* Nav */
+  nav{display:flex;align-items:center;padding:16px 0;border-bottom:1px solid var(--panel)}
+  nav .logo{font-size:20px;font-weight:700}
+  nav .logo span{color:var(--accent)}
+  nav .links{margin-left:auto;display:flex;gap:24px}
+  nav .links a{color:var(--ink-dim);text-decoration:none;font-size:14px;transition:.12s}
+  nav .links a:hover{color:var(--accent)}
+  .btn{display:inline-block;padding:10px 24px;border-radius:6px;font-weight:600;font-size:14px;
+       text-decoration:none;cursor:pointer;border:none;font-family:var(--font);transition:.12s}
+  .btn-primary{background:var(--accent);color:#000}
+  .btn-primary:hover{background:var(--accent-dim)}
+  .btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+  .btn-outline:hover{background:rgba(61,201,160,.1)}
+
+  /* Hero */
+  .hero{text-align:center;padding:80px 0 60px}
+  .hero h1{font-size:48px;font-weight:700;margin-bottom:14px;letter-spacing:-.5px}
+  .hero h1 span{color:var(--accent)}
+  .hero p{font-size:18px;color:var(--ink-dim);max-width:600px;margin:0 auto 32px}
+  .hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  /* Features */
+  .features{padding:60px 0}
+  .features h2{text-align:center;font-size:32px;margin-bottom:40px}
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .feature-card{background:var(--panel);border:1px solid rgba(100,160,200,.08);border-radius:10px;
+                padding:24px;transition:.15s}
+  .feature-card:hover{border-color:rgba(100,180,220,.2)}
+  .feature-card .ico{font-size:32px;margin-bottom:10px}
+  .feature-card h3{font-size:17px;margin-bottom:6px}
+  .feature-card p{font-size:13px;color:var(--ink-dim);line-height:1.5}
+
+  /* Pricing */
+  .pricing{padding:60px 0}
+  .pricing h2{text-align:center;font-size:32px;margin-bottom:40px}
+  .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:900px;margin:0 auto}
+  .price-card{background:var(--panel);border:1px solid rgba(100,160,200,.08);border-radius:10px;
+              padding:28px;text-align:center;transition:.15s;position:relative}
+  .price-card.featured{border-color:var(--accent)}
+  .price-card.featured::before{content:'推荐';position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+                                background:var(--accent);color:#000;padding:2px 14px;border-radius:10px;font-size:12px;font-weight:700}
+  .price-card h3{font-size:20px;margin-bottom:4px}
+  .price-card .price{font-size:40px;font-weight:700;font-family:var(--font-mono);margin:14px 0 4px}
+  .price-card .price span{font-size:16px;color:var(--ink-muted)}
+  .price-card .desc{color:var(--ink-dim);font-size:13px;margin-bottom:20px}
+  .price-card ul{list-style:none;text-align:left;font-size:14px;margin-bottom:20px}
+  .price-card ul li{padding:6px 0;border-bottom:1px solid var(--panel-hi)}
+  .price-card ul li::before{content:"✓ ";color:var(--accent);font-weight:700}
+
+  /* Steps */
+  .steps{padding:60px 0}
+  .steps h2{text-align:center;font-size:32px;margin-bottom:40px}
+  .step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+  .step-card{text-align:center;padding:20px}
+  .step-card .num{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#000;
+                  display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin:0 auto 12px}
+  .step-card h3{font-size:16px;margin-bottom:4px}
+  .step-card p{font-size:13px;color:var(--ink-dim)}
+
+  /* Footer */
+  footer{text-align:center;padding:40px 0;border-top:1px solid var(--panel);color:var(--ink-muted);font-size:13px}
+
+  @media(max-width:640px){
+    .hero h1{font-size:32px}
+    .hero p{font-size:16px}
+    nav .links{display:none}
+  }
+</style>
+</head>
+<body>
+<nav class="container">
+  <div class="logo">⚡<span>InsightReport</span></div>
+  <div class="links">
+    <a href="#features">功能</a>
+    <a href="#pricing">定价</a>
+    <a href="#steps">使用流程</a>
+    <a href="https://github.com" target="_blank">文档</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <h1>上传数据 · <span>智能分析</span> · 导出报告</h1>
+    <p>只需上传 CSV 或 Excel 文件，InsightReport 自动生成专业的统计分析报告。适合数据分析师、咨询顾问、科研人员和中小企业。</p>
+    <div class="ctas">
+      <a href="#" class="btn btn-primary" onclick="alert('\u8bf7\u5168\u5c4f\u6a21\u5f0f\u8fd0\u884c streamlit \u540e\u8bbf\u95ee\u672c\u5730\u670d\u52a1\u5668')">\u514d\u8d39\u5f00\u59cb</a>
+      <a href="#pricing" class="btn btn-outline">\u67e5\u770b\u4ef7\u683c</a>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="container">
+    <h2>\u529f\u80fd\u7279\u6027</h2>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="ico">\ud83d\udce5</div><h3>\u4e00\u952e\u4e0a\u4f20</h3><p>\u652f\u6301 CSV\u3001Excel\u3001JSON\u3001TSV \u683c\u5f0f\uff0c\u62d6\u62fd\u5373\u53ef\u4e0a\u4f20</p></div>
+      <div class="feature-card"><div class="ico">\ud83e\udde9</div><h3>\u667a\u80fd\u5206\u6790</h3><p>\u81ea\u52a8\u68c0\u6d4b\u6570\u636e\u7c7b\u578b\uff0c\u751f\u6210\u7edf\u8ba1\u63cf\u8ff0\u3001\u76f8\u5173\u6027\u3001\u5206\u5e03\u56fe</p></div>
+      <div class="feature-card"><div class="ico">\ud83d\udd0d</div><h3>\u5173\u952e\u6d1e\u5bdf</h3><p>\u81ea\u52a8\u53d1\u73b0\u5f3a\u76f8\u5173\u3001\u504f\u6001\u3001\u5f02\u5e38\u503c\u3001\u7f3a\u5931\u6a21\u5f0f</p></div>
+      <div class="feature-card"><div class="ico">\ud83d\udcc4</div><h3>\u4e13\u4e1a\u62a5\u544a</h3><p>\u5bfc\u51fa\u72ec\u7acb HTML \u62a5\u544a\uff0c\u53ef\u76f4\u63a5\u5206\u4eab\u7ed9\u5ba2\u6237\u6216\u540c\u4e8b</p></div>
+      <div class="feature-card"><div class="ico">\ud83d\udee0\ufe0f</div><h3>\u53ef\u89c6\u5316\u56fe\u8868</h3><p>Plotly \u4ea4\u4e92\u5f0f\u56fe\u8868\uff0c\u652f\u6301\u76f8\u5173\u70ed\u529b\u56fe\u3001\u76f4\u65b9\u56fe\u3001\u7bb1\u7ebf\u56fe</p></div>
+      <div class="feature-card"><div class="ico">\ud83c\udfaf</div><h3>\u6570\u636e\u8d28\u91cf\u8bc4\u5206</h3><p>\u81ea\u52a8\u8bc4\u4f30\u6570\u636e\u5b8c\u6574\u5ea6\u548c\u8d28\u91cf\uff0c\u7ed9\u51fa\u6e05\u6d17\u5efa\u8bae</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <h2>\u7b80\u5355\u660e\u4e86\u7684\u4ef7\u683c</h2>
+    <div class="price-grid">
+      <div class="price-card">
+        <h3>\u514d\u8d39\u7248</h3>
+        <div class="price">\u00a50<span>/\u6708</span></div>
+        <p class="desc">\u4e2a\u4eba\u7528\u6237\u5c1d\u9c9c</p>
+        <ul>
+          <li>5,000 \u884c / 20 \u5217\u9650\u5236</li>
+          <li>\u57fa\u7840\u7edf\u8ba1\u5206\u6790</li>
+          <li>HTML \u62a5\u544a\u5bfc\u51fa</li>
+          <li>\u5e7f\u544a\u652f\u6301</li>
+        </ul>
+        <a href="#" class="btn btn-outline" style="width:100%">\u5f00\u59cb\u4f7f\u7528</a>
+      </div>
+      <div class="price-card featured">
+        <h3>Pro \u7248</h3>
+        <div class="price">\u00a599<span>/\u6708</span></div>
+        <p class="desc">\u4e13\u4e1a\u5206\u6790\u5e08\u3001\u81ea\u7531\u804c\u4e1a\u8005</p>
+        <ul>
+          <li>100,000 \u884c / 200 \u5217</li>
+          <li>\u9ad8\u7ea7\u7edf\u8ba1\u5206\u6790</li>
+          <li>PDF + HTML \u62a5\u544a\u5bfc\u51fa</li>
+          <li>\u4e13\u5c5e API \u63a5\u53e3</li>
+          <li>\u65e0\u5e7f\u544a</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%">\u8ba2\u9605 Pro</a>
+      </div>
+      <div class="price-card">
+        <h3>\u4f01\u4e1a\u7248</h3>
+        <div class="price">\u00a5499<span>/\u6708</span></div>
+        <p class="desc">\u56e2\u961f\u3001\u4f01\u4e1a\u7528\u6237</p>
+        <ul>
+          <li>\u65e0\u9650\u884c\u6570 / \u5217\u6570</li>
+          <li>\u5168\u90e8\u5206\u6790\u529f\u80fd</li>
+          <li>\u5b9a\u5236\u62a5\u544a\u6a21\u677f</li>
+          <li>\u4e13\u5c5e API + \u56e2\u961f\u534f\u4f5c</li>
+          <li>\u4f18\u5148\u6280\u672f\u652f\u6301</li>
+        </ul>
+        <a href="#" class="btn btn-outline" style="width:100%">\u8054\u7cfb\u6211\u4eec</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps" id="steps">
+  <div class="container">
+    <h2>\u5982\u4f55\u4f7f\u7528</h2>
+    <div class="step-grid">
+      <div class="step-card"><div class="num">1</div><h3>\u4e0a\u4f20\u6570\u636e</h3><p>\u62d6\u62fd CSV \u6216 Excel \u6587\u4ef6\u5230\u5de5\u5177</p></div>
+      <div class="step-card"><div class="num">2</div><h3>\u81ea\u52a8\u5206\u6790</h3><p>\u7cfb\u7edf\u81ea\u52a8\u751f\u6210\u7edf\u8ba1\u62a5\u544a\u548c\u56fe\u8868</p></div>
+      <div class="step-card"><div class="num">3</div><h3>\u6d1e\u5bdf\u53d1\u73b0</h3><p>\u67e5\u770b\u5173\u952e\u53d1\u73b0\u548c\u6570\u636e\u5efa\u8bae</p></div>
+      <div class="step-card"><div class="num">4</div><h3>\u5bfc\u51fa\u62a5\u544a</h3><p>\u4e00\u952e\u751f\u6210\u4e13\u4e1a HTML \u62a5\u544a</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>InsightReport \u00a9 2026 &middot; Built with Python &amp; Streamlit &middot; \u6570\u636e\u4ec5\u5b58\u50a8\u5728\u672c\u5730</p>
+  </div>
+</footer>
+</body>
+</html>
